@@ -1,0 +1,46 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.w100{
+    width: 100%;
+}
+
+.h100{
+    height: 100%;
+}
+
+.page-content{
+    margin: 0 auto;
+    width: 1200px;
+    height: 100%;
+}
+
+.border{
+    border: 1px solid black;
+}
+
+.flex{
+    display: flex;
+}
+
+.jc-center{
+    justify-content: center;
+}
+.jc-end{
+    justify-content: end;
+}
+.jc-start{
+    justify-content: start;
+}
+.jc-around{
+    justify-content: space-around;
+}
+.jc-between{
+    justify-content: space-between;
+}
+.ai-center{
+    align-items: center;
+}
