@@ -1,6 +1,6 @@
 <template>
   <div class="card-container">
-    <div class="good" v-if="categoryId!=0&&Object.keys(this.data).length">
+    <div class="good" v-if="categoryId!=0&&Object.keys(data).length"  @click="selectGood(data.productId)">
         <div class="pic"><img :src="data.productPicture" class="w100 h100"></div>
         <div class="name">{{data.productName}}</div>
         <div class="title">{{data.productTitle}}</div>
@@ -25,6 +25,16 @@ export default {
             data:{}
         }
     },
+    methods:{
+        selectGood(id){
+            this.$router.push({
+                name:'detail',
+                params:{
+                    productId:id
+                }
+            })
+        }
+    },
     created(){
         hot().then(res=>{
             if(this.categoryId&&this.categoryId!=0){
@@ -45,6 +55,7 @@ export default {
     height: 300px;
     background-color: #fff;
     .good{
+        cursor: pointer;
         text-align: center;
         &>div{
             width: fit-content;

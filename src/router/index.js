@@ -12,7 +12,8 @@ const routes = [
     name:'home',
     component:()=>import('@/views/Home.vue'),
     children:[
-      {path:'index',name:'index',component:()=>import('@/views/pages/Index.vue')}
+      {path:'index',name:'index',component:()=>import('@/views/pages/Index.vue')},
+      {path:'detail/:productId',name:'detail',component:()=>import('@/views/pages/Detail.vue')},
     ]
   },
 ]

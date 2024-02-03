@@ -90,6 +90,7 @@
 import {banner,hot} from '@/api/common.js'
 import '@/assets/public.css'
 import Card from '@/components/Card.vue'
+import router from '@/router'
 export default {
     components:{Card},
     data(){
@@ -115,13 +116,14 @@ export default {
         },
         getHot(){
             hot().then(res=>{
+                console.log(res.rows);
                 this.phones.leftPic=process.env.VUE_APP_BASE_URL+res.rows[0].categoryPicture1;
                 this.households.householdPic1=process.env.VUE_APP_BASE_URL+res.rows[1].categoryPicture1
                 this.households.householdPic2=process.env.VUE_APP_BASE_URL+res.rows[1].categoryPicture2
                 this.configs.configPic1=process.env.VUE_APP_BASE_URL+res.rows[2].categoryPicture1
                 this.configs.configPic2=process.env.VUE_APP_BASE_URL+res.rows[2].categoryPicture2
             })
-        }
+        },
     },
     created(){
         this.getBanner()
@@ -136,6 +138,7 @@ export default {
     margin-bottom: 24px;
     background-color: #f5f5f5;
     .banner-container{
+        padding-top: 24px;
         padding-bottom: 32px;
         background-color: #fff;
     }
