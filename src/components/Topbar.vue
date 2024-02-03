@@ -1,5 +1,5 @@
 <template>
-  <div class="topbar-container w100">
+  <div class="topbar-container">
     <div class="page-content flex jc-end">
       <div class="ops flex h100 ai-center">
         <div class="op" @click="loginVisible=true">登录</div>|

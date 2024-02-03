@@ -2,6 +2,7 @@
   <div>
     <topbar></topbar>
     <logobar></logobar>
+    <router-view></router-view>
     <bottombar></bottombar>
   </div>
 </template>

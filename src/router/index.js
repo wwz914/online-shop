@@ -6,7 +6,15 @@ Vue.use(VueRouter)
 const routes = [
   // 重定向
   {path:'/',redirect:'/home'},
-  {path:'/home',name:'home',component:()=>import('@/views/Home.vue')},
+  {path:'/home',redirect:'/home/index'},
+  {
+    path:'/home',
+    name:'home',
+    component:()=>import('@/views/Home.vue'),
+    children:[
+      {path:'index',name:'index',component:()=>import('@/views/pages/Index.vue')}
+    ]
+  },
 ]
 
 const router = new VueRouter({

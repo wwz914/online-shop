@@ -31,6 +31,7 @@ export default {
 .logobar-container{
   height: 61px;
   font-size: 14px;
+  margin-bottom: 24px;
   .page-content{
     border-bottom: 1px #e6e6e6 solid;
     .ops{
