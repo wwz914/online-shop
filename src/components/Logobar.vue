@@ -41,12 +41,15 @@ export default {
   },
   created(){
     const locationIndex=location.href.split('/')[location.href.split('/').length-1]
+    const pre_locationIndex=location.href.split('/')[location.href.split('/').length-2]
     if(locationIndex=='index'){
       this.$store.commit('changePage',1)
     }else if(locationIndex=='good'){
       this.$store.commit('changePage',2)
     }else if(locationIndex=='about'){
       this.$store.commit('changePage',3)
+    }else if(typeof locationIndex*1==Number&&pre_locationIndex=='detail'){
+      this.$store.commit('changePage',5)
     }
   }
 }

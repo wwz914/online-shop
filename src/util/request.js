@@ -9,7 +9,7 @@ const instance=axios.create({
 
 instance.interceptors.request.use(res=>{
     const {isToken=true}=res
-    if(isToken)res.headers['Authorization']='Bearer '+VueCookies.get('xm-token')
+    if(isToken)res.headers['Authorization']= VueCookies.get('xm-token')
     return res
 })
 
@@ -43,7 +43,7 @@ function unAccessToken(instance){
         MessageBox.alert('登录过期，请重新登录').then(()=>{
             //删除token
             VueCookies.remove('xm-token')
-            store.commit('isLoginVisisble',true)
+            store.commit('changeLogin',true)
         })
     }
 }

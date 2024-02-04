@@ -2,10 +2,10 @@
   <div class="topbar-container">
     <div class="page-content flex jc-end">
       <div class="ops flex h100 ai-center">
-        <div class="op" @click="loginVisible=true">登录</div>|
-        <div class="op" @click="signinVisible=true">注册</div>
+        <div class="op" @click="$store.commit('changeLogin',true)">登录</div>|
+        <div class="op" @click="$store.commit('changeRegister',true)">注册</div>
         <div class="op">我的订单</div>
-        <div class="op">我的收藏</div>
+        <div class="op" @click="toLike">我的收藏</div>
         <div class="op"><i class="el-icon-shopping-cart-2"></i>购物车(0)</div>
       </div>
       <el-dialog title="登录" :visible.sync="loginVisible" width="306px" :before-close="loginHandleClose">
@@ -17,7 +17,7 @@
               <el-input v-model="loginForm.password" placeholder="请输入密码" prefix-icon="el-icon-view"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" class="w100">登录</el-button>
+              <el-button type="primary" class="w100" @click="toLogin">登录</el-button>
             </el-form-item>
          </el-form>
       </el-dialog>
@@ -33,7 +33,7 @@
               <el-input v-model="signinForm.confirmPwd" placeholder="请再次输入密码" prefix-icon="el-icon-view"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" class="w100">注册</el-button>
+              <el-button type="primary" class="w100" @click="toRegister">注册</el-button>
             </el-form-item>
          </el-form>
       </el-dialog>
@@ -42,7 +42,9 @@
 </template>
 
 <script>
+import {login,register} from '@/api/user.js'
 import '@/assets/public.css'
+import { Message } from 'element-ui'
 export default {
   data(){
     const validatePwd=(rule,value,cb)=>{
@@ -55,8 +57,6 @@ export default {
       }
     }
     return{
-      loginVisible:false,
-      signinVisible:false,
       loginForm:{},
       signinForm:{},
       rules:{
@@ -66,14 +66,46 @@ export default {
       },
     }
   },
+  computed:{
+    loginVisible(){
+      return this.$store.state.isLoginVisisble
+    },
+    signinVisible(){
+      return this.$store.state.isSigninVisisble
+    }
+  },
   methods:{
     loginHandleClose(){
-      this.loginVisible=false,
+      this.$store.commit('changeLogin',false)
       this.$refs['login'].resetFields()
     },
     signinHandleClose(){
-      this.signinVisible=false,
+      this.$store.commit('changeRegister',false)
       this.$refs['signin'].resetFields()
+    },
+    toLike(){
+      this.$router.push('like')
+      this.$store.commit('changePage',4)
+    },
+    toLogin(){
+      login(this.loginForm).then(res=>{
+        console.log(res);
+        this.$cookies.set('xm-token',res.data,'2d')
+        Message.success(res.msg)
+        this.$store.commit('changeLogin',false)
+      })
+    },
+    toRegister(){
+      register(this.signinForm).then(res=>{
+        Message.success(res.msg)
+        this.$store.commit('changeRegister',false)
+      })
+    }
+  },
+  created(){
+    const locationIndex=location.href.split('/')[location.href.split('/').length-1]
+    if(locationIndex=='like'){
+      this.$store.commit('changePage',4)
     }
   }
 }

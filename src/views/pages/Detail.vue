@@ -46,7 +46,7 @@
           </div>
           <div class="btns flex jc-between">
             <el-button class="add">加入购物车</el-button>
-            <el-button class="like">喜欢</el-button>
+            <el-button class="like" @click="loveU">喜欢</el-button>
           </div>
           <div class="items flex">
             <div class="item"><img src="@/assets/img/ok.png">小米自营</div>
@@ -62,11 +62,26 @@
 
 <script>
 import {detail} from '@/api/good.js'
+import {like} from '@/api/like.js'
+import VueCookies from 'vue-cookies'
 import '@/assets/public.css'
+import { Message } from 'element-ui'
 export default {
   data(){
     return{
       data:{}
+    }
+  },
+  methods:{
+    loveU(){
+      if(!VueCookies.isKey('xm-token')){
+        this.$store.commit('changeLogin',true)
+      }else{
+        like(this.data.productId).then(res=>{
+          console.log(res);
+          Message.success(res.msg)
+        })
+      }
     }
   },
   created(){

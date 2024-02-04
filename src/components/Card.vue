@@ -20,7 +20,7 @@
 import {hot} from '@/api/common.js'
 import {goodList} from '@/api/good.js'
 export default {
-    props:['categoryId','index','findByCate'],
+    props:['categoryId','index','findByCate','like','findByLike'],
     data(){
         return{
             data:{},
@@ -40,6 +40,7 @@ export default {
                     productId:id
                 }
             })
+            this.$store.commit('changePage',5)
         }
     },
     created(){
@@ -50,6 +51,9 @@ export default {
                 this.data=res.rows[0]
                 this.data.productPicture=process.env.VUE_APP_BASE_URL+this.data.productPicture
             })
+        }else if(this.findByLike){
+            this.like.productPicture=process.env.VUE_APP_BASE_URL+this.like.productPicture
+            this.data=this.like
         }else{
             hot().then(res=>{
                 if(this.categoryId&&this.categoryId!=0){

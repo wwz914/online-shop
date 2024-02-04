@@ -6,6 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isLoginVisisble:undefined,
+    isSigninVisisble:undefined,
     pageIndex:1
   },
   getters: {
@@ -13,7 +14,13 @@ export default new Vuex.Store({
   mutations: {
     changePage(state,payload){
       state.pageIndex=payload
-    }
+    },
+    changeLogin(state,payload){
+      state.isLoginVisisble=payload
+    },
+    changeRegister(state,payload){
+      state.isSigninVisisble=payload
+    },
   },
   actions: {
   },
