@@ -5,11 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isLoginVisisble:undefined
+    isLoginVisisble:undefined,
+    pageIndex:1
   },
   getters: {
   },
   mutations: {
+    changePage(state,payload){
+      state.pageIndex=payload
+    }
   },
   actions: {
   },

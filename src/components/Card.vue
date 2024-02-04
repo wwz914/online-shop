@@ -12,17 +12,24 @@
     <div class="more w100 h100" v-if="categoryId==0">
         <div>浏览更多&gt;&gt;</div>
     </div>
-    <div v-if="!empty"></div>
   </div>
 </template>
 
 <script>
+//TODO:页面刷新停留
 import {hot} from '@/api/common.js'
+import {goodList} from '@/api/good.js'
 export default {
-    props:['categoryId','index','empty'],
+    props:['categoryId','index','findByCate'],
     data(){
         return{
-            data:{}
+            data:{},
+            query:{
+                pageNum:1,
+                pageSize:1,
+                productId:undefined,
+                categoryId:undefined
+            }
         }
     },
     methods:{
@@ -36,14 +43,23 @@ export default {
         }
     },
     created(){
-        hot().then(res=>{
-            if(this.categoryId&&this.categoryId!=0){
-                if(res.rows[this.categoryId-1].products[this.index-1]){
-                    this.data=res.rows[this.categoryId-1].products[this.index-1]
-                    this.data.productPicture=process.env.VUE_APP_BASE_URL+this.data.productPicture
+        if(this.findByCate){
+            this.query.productId=this.index
+            this.query.categoryId=this.categoryId
+            goodList(this.query).then(res=>{
+                this.data=res.rows[0]
+                this.data.productPicture=process.env.VUE_APP_BASE_URL+this.data.productPicture
+            })
+        }else{
+            hot().then(res=>{
+                if(this.categoryId&&this.categoryId!=0){
+                    if(res.rows[this.categoryId-1].products[this.index-1]){
+                        this.data=res.rows[this.categoryId-1].products[this.index-1]
+                        this.data.productPicture=process.env.VUE_APP_BASE_URL+this.data.productPicture
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 }
 </script>

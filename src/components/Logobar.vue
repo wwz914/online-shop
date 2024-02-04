@@ -3,9 +3,9 @@
     <div class="page-content flex jc-between ai-center">
       <div class="logo"><img src="@/assets/img/logo.png" alt=""></div>
       <div class="ops flex h100">
-        <div class="op" :class="{highlight:pageIndex==1?true:false}" @click="pageIndex=1">首页</div>
-        <div class="op" :class="{highlight:pageIndex==2?true:false}" @click="pageIndex=2">全部商品</div>
-        <div class="op" :class="{highlight:pageIndex==3?true:false}" @click="pageIndex=3">关于我们</div>
+        <div class="op" :class="{highlight:$store.state.pageIndex==1?true:false}" @click="toIndex">首页</div>
+        <div class="op" :class="{highlight:$store.state.pageIndex==2?true:false}" @click="toGood">全部商品</div>
+        <div class="op" :class="{highlight:$store.state.pageIndex==3?true:false}" @click="toAbout">关于我们</div>
       </div>
       <div class="search-place">
         <el-input placeholder="请输入搜索内容">
@@ -22,6 +22,31 @@ export default {
   data(){
     return{
       pageIndex:1,
+    }
+  },
+  methods:{
+    toIndex(){
+      if(this.$store.state.pageIndex!=1){
+        this.$router.push('index')
+      }
+      this.$store.commit('changePage',1)
+    },
+    toGood(){
+      if(this.$store.state.pageIndex!=2){
+        this.$router.push('good')
+      }
+      this.$store.commit('changePage',2)
+    },
+    toAbout(){}
+  },
+  created(){
+    const locationIndex=location.href.split('/')[location.href.split('/').length-1]
+    if(locationIndex=='index'){
+      this.$store.commit('changePage',1)
+    }else if(locationIndex=='good'){
+      this.$store.commit('changePage',2)
+    }else if(locationIndex=='about'){
+      this.$store.commit('changePage',3)
     }
   }
 }
