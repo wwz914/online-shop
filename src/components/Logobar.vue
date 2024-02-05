@@ -50,6 +50,8 @@ export default {
       this.$store.commit('changePage',3)
     }else if(typeof locationIndex*1==Number&&pre_locationIndex=='detail'){
       this.$store.commit('changePage',5)
+    }else if(locationIndex=='cart'){
+      this.$store.commit('changePage',6)
     }
   }
 }

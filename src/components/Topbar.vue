@@ -6,7 +6,7 @@
         <div class="op" @click="$store.commit('changeRegister',true)">注册</div>
         <div class="op">我的订单</div>
         <div class="op" @click="toLike">我的收藏</div>
-        <div class="op"><i class="el-icon-shopping-cart-2"></i>购物车(0)</div>
+        <div class="op" @click="toCart"><i class="el-icon-shopping-cart-2"></i>购物车(0)</div>
       </div>
       <el-dialog title="登录" :visible.sync="loginVisible" width="306px" :before-close="loginHandleClose">
          <el-form ref="login" :model="loginForm" :rules="rules">
@@ -100,12 +100,18 @@ export default {
         Message.success(res.msg)
         this.$store.commit('changeRegister',false)
       })
+    },
+    toCart(){
+      this.$router.push('cart')
+      this.$store.commit('changePage',6)
     }
   },
   created(){
     const locationIndex=location.href.split('/')[location.href.split('/').length-1]
     if(locationIndex=='like'){
       this.$store.commit('changePage',4)
+    }else if(locationIndex=='cart'){
+      this.$store.commit('changePage',6)
     }
   }
 }

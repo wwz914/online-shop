@@ -16,6 +16,7 @@ const routes = [
       {path:'detail/:productId',name:'detail',component:()=>import('@/views/pages/Detail.vue')},
       {path:'good',name:'good',component:()=>import('@/views/pages/Good.vue')},
       {path:'like',name:'like',component:()=>import('@/views/pages/Like.vue')},
+      {path:'cart',name:'cart',component:()=>import('@/views/pages/Cart.vue')},
     ]
   },
 ]

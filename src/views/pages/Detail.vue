@@ -45,7 +45,7 @@
             </div>
           </div>
           <div class="btns flex jc-between">
-            <el-button class="add">加入购物车</el-button>
+            <el-button class="add" @click="addU">加入购物车</el-button>
             <el-button class="like" @click="loveU">喜欢</el-button>
           </div>
           <div class="items flex">
@@ -63,6 +63,7 @@
 <script>
 import {detail} from '@/api/good.js'
 import {like} from '@/api/like.js'
+import {addToCart} from '@/api/cart.js'
 import VueCookies from 'vue-cookies'
 import '@/assets/public.css'
 import { Message } from 'element-ui'
@@ -78,6 +79,15 @@ export default {
         this.$store.commit('changeLogin',true)
       }else{
         like(this.data.productId).then(res=>{
+          Message.success(res.msg)
+        })
+      }
+    },
+    addU(){
+      if(!VueCookies.isKey('xm-token')){
+        this.$store.commit('changeLogin',true)
+      }else{
+        addToCart({productId:this.data.productId}).then(res=>{
           console.log(res);
           Message.success(res.msg)
         })
