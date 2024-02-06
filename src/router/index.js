@@ -17,6 +17,8 @@ const routes = [
       {path:'good',name:'good',component:()=>import('@/views/pages/Good.vue')},
       {path:'like',name:'like',component:()=>import('@/views/pages/Like.vue')},
       {path:'cart',name:'cart',component:()=>import('@/views/pages/Cart.vue')},
+      {path:'order',name:'order',component:()=>import('@/views/pages/Order.vue')},
+      {path:'check',name:'check',component:()=>import('@/views/pages/Check.vue')},
     ]
   },
 ]

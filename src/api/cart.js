@@ -22,3 +22,10 @@ export function deleteCart(shoppingCartId){
         method:'DELETE'
     })
 }
+
+export function cartCount(){
+    return instance({
+        url:'/xiaomi/v2/shoppingCart/product/count',
+        method:'GET'
+    })
+}

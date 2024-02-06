@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     isLoginVisisble:undefined,
     isSigninVisisble:undefined,
-    pageIndex:1
+    pageIndex:1,
+    checks:[]
   },
   getters: {
   },
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     changeRegister(state,payload){
       state.isSigninVisisble=payload
     },
+    changeChecks(state,payload){
+      state.checks=payload
+    }
   },
   actions: {
   },

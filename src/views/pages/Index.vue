@@ -105,7 +105,7 @@ export default {
                 householdPic1:undefined,
                 householdPic2:undefined,
             },
-            configs:{}
+            configs:{},
         }
     },
     methods:{

@@ -102,10 +102,12 @@ export default {
     },
     methods:{
         selectionChange(val){
+            console.log(val);
             this.selected=val.length
             if(val.length>0){
                 this.allPrice=0
                 this.selectedRows=[]
+                this.$store.commit('changeChecks',val)
                 val.forEach(e => {
                     this.allPrice+=e.productSellingPrice*e.num
                     this.selectedRows.push(e.productId)
@@ -116,7 +118,12 @@ export default {
             }
         },
         handleChange(val){},
-        goCheck(){},
+        goCheck(){
+            if(this.$store.state.checks.length){
+                this.$router.push('check')
+                this.$store.commit('changePage',8)
+            }
+        },
         goAhead(){
             this.$router.push('index')
             this.$store.commit('changePage',1)
@@ -237,6 +244,10 @@ export default {
                     text-align: center;
                     line-height: 48px;
                     background-color: #E0E0E0;
+                    &:hover{
+                        color: #fff;
+                        background-color: #E75D00;
+                    }
                 }
             }
         }
