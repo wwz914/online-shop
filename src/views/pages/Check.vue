@@ -9,33 +9,191 @@
     <div class="content">
       <div class="page-content">
         <div class="item">
-          <span style="margin-bottom:20px">收货地址</span>
-          <div class="adds" style="margin-bottom:36px;">
+          <span>收货地址</span>
+          <div class="adds" style="margin-bottom:36px;margin-top:20px;">
             <div class="add" v-for="i in address">
               <div>name</div>
               <div>123456789</div>
               <div>address</div>
               <div>school</div>
             </div>
-            <div class="add"><i class="el-icon-circle-plus-outline"></i></div>
+            <div class="add1" @click="addAddress"><i class="el-icon-circle-plus-outline"></i></div>
           </div>
         </div>
         <div class="item">
           <span>商品及优惠券</span>
           <el-divider></el-divider>
-          
+          <div class="good flex jc-between ai-center" v-for="i in data" :key="i.productId">
+            <div class="left flex ai-center">
+              <div class="pic"><img :src="base+i.productPicture" class="w100 h100"></div>
+              <span>{{i.productName}}</span>
+            </div>
+            <div class="right" style="color:#FF6700;">{{i.productSellingPrice*i.num}}元</div>
+          </div>
+        </div>
+        <el-divider></el-divider>
+        <div class="item">
+          <span>配送方式</span>
+          <span class="post">包邮</span>
+        </div>
+        <el-divider></el-divider>
+        <div class="item flex" style="gap:114px">
+          <span>发票</span>
+          <div class="billInfo flex jc-between">
+            <div>电子发票</div>
+            <div>个人</div>
+            <div>商品明细</div>
+          </div>
+        </div>
+        <el-divider></el-divider>
+        <div class="flex jc-end">
+          <div class="right">
+            <div class="flex jc-end">
+              <div class="bill">
+                <div class="flex">
+                  <span class="key" style="width:86px">商品件数:</span>
+                  <span class="value" style="flex:1;">{{data.reduce((pre,cur)=>pre+cur.num,0)}}件</span>
+                </div>
+                <div class="flex">
+                  <span class="key" style="width:86px">商品总价:</span>
+                  <span class="value" style="flex:1;">{{data.reduce((pre,cur)=>pre+cur.num*cur.productSellingPrice,0)}}元</span>
+                </div>
+                <div class="flex">
+                  <span class="key" style="width:86px">活动优惠:</span>
+                  <span class="value" style="flex:1;">-0元</span>
+                </div>
+                <div class="flex">
+                  <span class="key" style="width:86px">优惠券折扣:</span>
+                  <span class="value" style="flex:1;">-0元</span>
+                </div>
+                <div class="flex">
+                  <span class="key" style="width:86px">运费:</span>
+                  <span class="value" style="flex:1;">0元</span>
+                </div>
+                <div class="flex">
+                  <span class="key" style="width:86px">应付总额:</span>
+                  <span class="value" style="flex:1;">{{data.reduce((pre,cur)=>pre+cur.num*cur.productSellingPrice,0)}}元</span>
+                </div>
+              </div>
+            </div>
+            <div class="btns">
+              <el-button class="backToCart">返回购物车</el-button>
+              <el-button class="check">结算</el-button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <el-dialog
+      title="添加收货地址"
+      :visible.sync="dialogVisible"
+      width="660px"
+      :before-close="handleClose">
+      <div class="dialog-content">
+        <el-form ref="addressRef" :model="addressForm">
+          <el-form-item>
+            <el-col :span="11">
+              <el-input v-model="addressForm.name" placeholder="姓名"></el-input>
+            </el-col>
+            <el-col :span="2">  &nbsp;</el-col>
+            <el-col :span="11">
+              <el-input v-model="addressForm.phone" placeholder="手机号"></el-input>
+            </el-col>
+          </el-form-item>
+          <el-form-item>
+            <el-cascader
+              v-model="addressForm.area"
+              :props="props"
+              placeholder="选择省/市/区/街道"
+              style="width:100%;"
+              @change="handleChange">
+            </el-cascader>
+          </el-form-item>
+          <el-form-item>
+              <el-input
+                type="textarea"
+                :rows="3"
+                placeholder="详细地址"
+                style="fontSize:14px;"
+                v-model="addressForm.addressDtl">
+              </el-input>
+          </el-form-item>
+          <el-form-item>
+              <el-input v-model="addressForm.addressTags" placeholder="地址标签"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="cancel" @click="dialogVisible = false">取 消</el-button>
+        <el-button class="confirm" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import {area} from '@/api/area.js'
+import '@/assets/public.css'
 export default {
   data(){
     return{
-      address:[]
+      dialogVisible:true,
+      address:[],
+      props:{
+        lazy:true,
+        lazyLoad(node,resolve){
+          const {value}=node
+          area(value?value:1).then(res=>{
+            const nodes=res.data.map(i=>({
+              value:i.id,
+              label:i.name,
+            }))
+            resolve(nodes)
+          })
+        }
+      },
+      addressForm:{
+        addressDtl:undefined,
+        addressTags:undefined,
+        area:undefined,
+        name:undefined,
+        phone:undefined
+      },
+      data:[
+        {
+          num:1,
+          productId: 10,
+          productIntro: "全面屏设计 | 内置小爱同学 | 4K + HDR | 杜比DTS | PatchWall | 海量内容 | 2GB + 8GB大存储 | 64位四核处理器",
+          productName: "小米全面屏电视E55A",
+          productPicture: "xiaomi-images/appliance/MiTv-E55A.png",
+          productPrice: 2099,
+          productSellingPrice: 1899,
+          productTitle: "全面屏设计，人工智能语音"
+        }
+      ],
     }
+  },
+  computed:{
+    base(){
+      return process.env.VUE_APP_BASE_URL
+    }
+  },
+  methods:{
+    addAddress(){
+      this.dialogVisible=true
+    },
+    handleClose(){
+      this.dialogVisible=false
+    },
+    handleChange(){}
+  },
+  created(){
+    area(1).then(res1=>{
+      console.log(res1);
+    })
+    area(150302).then(res2=>{
+      console.log(res2);
+    })
   }
 }
 </script>
@@ -55,8 +213,98 @@ export default {
       background-color: #fff;
       .item{
         font-size: 18px;
+        .add{
+          width: 270px;
+          height: 194px;
+          border: 1px solid #B0B0B0;
+        }
+        .add1{
+          width: 270px;
+          height: 194px;
+          font-size: 34px;
+          line-height:194px;
+          text-align:center;
+          border: 1px solid #B0B0B0;
+          &:hover{
+            color: #FF6700;
+            border: 1px solid #FF6700;
+          }
+        }
+        .good{
+          font-size:16px;
+          .left{
+            gap: 6px;
+            .pic{
+              width: 36px;
+              height: 36px;
+            }
+          }
+          
+        }
+        .billInfo{
+          gap: 20px;
+          font-size:16px;
+          color:#FF6700;
+        }
+        .post{
+          color:#FF6700;
+          font-size:16px;
+          margin-left: 78px;
+        }
+      }
+      .bill{
+        width: 208px;
+        // height: 184px;
+        margin-bottom: 46px;
+        text-align: right;
+        .flex{
+          margin-bottom: 14px;
+          .value{
+            color: #FF6700;
+          }
+        }
+      }
+      .el-button{
+        width: 160px;
+        height: 38px;
+        border-radius: 0;
+      }
+      .backToCart{
+        color: #B0B0B0;
+        font-size: 14px;
+        margin-right: 24px;
+      }
+      .check{
+        color: #fff;
+        margin: 0;
+        background-color: #FF6700;
+        font-size: 14px;
       }
     }
+  }
+}
+.dialog-content{
+  }
+.cancel{
+  color: #fff;
+  width: 160px;
+  height: 42px;
+  border-radius: 0;
+  background-color: #FF6700;
+}
+.confirm{
+  color: #fff;
+  width: 160px;
+  height: 42px;
+  border-radius: 0;
+  background-color: #B0B0B0;
+}
+::v-deep{
+  .el-dialog__body{
+    padding-bottom: 0;
+  }
+  .el-dialog__footer{
+    text-align: center;
   }
 }
 </style>
