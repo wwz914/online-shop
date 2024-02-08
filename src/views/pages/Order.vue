@@ -21,7 +21,7 @@
                 <div class="order" v-for="i in orderList">
                     <div class="up-part flex jc-between ai-center">
                         <div class="left" style="color:#FF6700;">订单编号:{{i.orderId}}</div>
-                        <div class="right">订单时间:{{i.orderDate}}</div>
+                        <div class="right">订单时间:{{i.orderTime}}</div>
                     </div>
                     <div class="mid-part">
                         <div class="items flex">
@@ -32,19 +32,19 @@
                             <div class="item" style="flex:1;">小计</div>
                         </div>
                         <el-divider></el-divider>
-                        <div class="good flex">
-                            <div class="item" style="width:200px;"><div class="pic"><img :src="base+i.productPicture" class="w100 h100"></div></div>
-                            <div class="item" style="width:420px;text-align:left;">{{i.productName}}</div>
-                            <div class="item" style="width:200px;">{{i.productSellingPrice}}元</div>
-                            <div class="item" style="width:100px;">{{i.num}}</div>
-                            <div class="item" style="flex:1;color:#FF6700;">{{i.productSellingPrice*i.num}}元</div>    
+                        <div class="good flex" v-for="e in i.products">
+                            <div class="item" style="width:200px;"><div class="pic"><img :src="base+e.productPicture" class="w100 h100"></div></div>
+                            <div class="item" style="width:420px;text-align:left;">{{e.productName}}</div>
+                            <div class="item" style="width:200px;">{{e.productSellingPrice}}元</div>
+                            <div class="item" style="width:100px;">{{e.num}}</div>
+                            <div class="item" style="flex:1;color:#FF6700;">{{e.productSellingPrice*e.num}}元</div>    
                         </div>
                     </div>
                     <div class="down-part flex jc-between ai-center">
-                        <div class="left">共<span style="color:#FF6700">{{i.num}}</span>件商品</div>
+                        <div class="left">共<span style="color:#FF6700">{{i.products.length}}</span>件商品</div>
                         <div class="right" style="color:#FF6700;">
                             <span>合计:</span>
-                            <span class="allPrice">{{i.productSellingPrice*i.num}}元</span>
+                            <span class="allPrice">{{i.products.reduce((pre,cur)=>pre+cur.productSellingPrice*cur.num,0)}}元</span>
                         </div>
                     </div>
                 </div>
@@ -62,16 +62,15 @@ export default {
         return{
             orderList:[
                 {
-                    orderId:70081648646035240,
-                    orderDate:new Date(),
-                    num:1,
-                    productId:3,
-                    productIntro: "1亿像素主摄 / 全场景五摄像头 / 四闪光灯 / 3200万自拍 / 10 倍混合光学变焦，50倍数字变焦 / 5260mAh ⼤电量 / 标配 30W疾速快充 / ⼩米⾸款超薄屏下指纹 / 德国莱茵低蓝光认证 / 多功能NFC / 红外万能遥控 / 1216超线性扬声器",
-                    productName: "小米CC9 Pro",
-                    productPicture: "xiaomi-images/phone/Mi-CC9.png",
-                    productPrice: 2799,
-                    productSellingPrice: 2599,
-                    productTitle: "1亿像素,五摄四闪"
+                    addressDtl: "xxxxxx",
+                    addressTags: "北京",
+                    addressee: "wwz",
+                    addresseeArea: "北京市,西城区",
+                    addresseePhone: "15960855602",
+                    orderId: 3706,
+                    orderNum: "d7f711772908433a9d0f625c5e90c329",
+                    orderTime: "2024-02-08 21:16:32",
+                    products: [],
                 }
             ]
         }
@@ -83,7 +82,7 @@ export default {
     },
     created(){
         getOrder().then(res=>{
-            console.log(res);
+            this.orderList=res.data
         })
     }
 }

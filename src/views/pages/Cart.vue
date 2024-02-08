@@ -102,12 +102,12 @@ export default {
     },
     methods:{
         selectionChange(val){
-            console.log(val);
             this.selected=val.length
             if(val.length>0){
                 this.allPrice=0
                 this.selectedRows=[]
                 this.$store.commit('changeChecks',val)
+                sessionStorage.setItem('carts',JSON.stringify(val))
                 val.forEach(e => {
                     this.allPrice+=e.productSellingPrice*e.num
                     this.selectedRows.push(e.productId)
@@ -131,7 +131,6 @@ export default {
         deleteU(id,shoppingCartId){
             this.cartList=this.cartList.filter(i=>i.productId!=id)
             deleteCart(shoppingCartId).then(res=>{
-                console.log(res);
                 Message.success(res.msg)
             })
         }

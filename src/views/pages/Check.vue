@@ -10,12 +10,13 @@
       <div class="page-content">
         <div class="item">
           <span>收货地址</span>
-          <div class="adds" style="margin-bottom:36px;margin-top:20px;">
-            <div class="add" v-for="i in address">
-              <div>name</div>
-              <div>123456789</div>
-              <div>address</div>
-              <div>school</div>
+          <div class="adds flex flex-wrap">
+            <div class="add" v-for="(i,index) in address" :key="index" :class="{addGolden:selected.addressId==i.addressId}" @click="chooseAddress(i)">
+              <div style="fontSize:18px;color:black;">{{i.name}}</div>
+              <div style="margin-top:18px;">{{i.phone}}</div>
+              <div style="margin-top:12px;">{{toArea(i.area)}}</div>
+              <div style="margin-top:10px;">{{i.addressDtl}}</div>
+              <i class="el-icon-close" @click="deleteAddress(i)"></i>
             </div>
             <div class="add1" @click="addAddress"><i class="el-icon-circle-plus-outline"></i></div>
           </div>
@@ -78,7 +79,7 @@
             </div>
             <div class="btns">
               <el-button class="backToCart">返回购物车</el-button>
-              <el-button class="check">结算</el-button>
+              <el-button class="check" @click="finalCheck">结算</el-button>
             </div>
           </div>
         </div>
@@ -95,8 +96,9 @@
             <el-col :span="11">
               <el-input v-model="addressForm.name" placeholder="姓名"></el-input>
             </el-col>
-            <el-col :span="2">  &nbsp;</el-col>
+            <el-col :span="2">&nbsp;</el-col>
             <el-col :span="11">
+              <!-- TODO:手机号校验 -->
               <el-input v-model="addressForm.phone" placeholder="手机号"></el-input>
             </el-col>
           </el-form-item>
@@ -125,19 +127,23 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button class="cancel" @click="dialogVisible = false">取 消</el-button>
-        <el-button class="confirm" @click="dialogVisible = false">确 定</el-button>
+        <el-button class="confirm" @click="addConfirm">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import {addAddress,getAddress,removeAddress,createOrder} from '@/api/order.js'
 import {area} from '@/api/area.js'
 import '@/assets/public.css'
+import { Message } from 'element-ui'
 export default {
   data(){
     return{
-      dialogVisible:true,
+      cart:undefined,
+      selected:{},
+      dialogVisible:false,
       address:[],
       props:{
         lazy:true,
@@ -176,6 +182,11 @@ export default {
   computed:{
     base(){
       return process.env.VUE_APP_BASE_URL
+    },
+    toArea(){
+      return (str)=>{
+        return str.split(',').join(' ')
+      }
     }
   },
   methods:{
@@ -185,20 +196,71 @@ export default {
     handleClose(){
       this.dialogVisible=false
     },
-    handleChange(){}
+    handleChange(){},
+    addConfirm(){
+      this.dialogVisible=false
+      let newArr=[]
+      let arr=this.addressForm.area
+      this.fn(arr[0],0,arr,newArr)
+    },
+    fn(id,num,arr,newArr){
+      let areaId=1
+      if(num==arr.length)return
+      if(num!=0)areaId=arr[num-1]
+      area(areaId).then(res=>{
+        newArr[num]=res.data.find(e=>e.id==id).name
+        num++
+        if(num==arr.length){
+          this.addressForm.area=newArr.toString()
+          this.finalAdd(this.addressForm)
+        }else{
+          this.fn(arr[num],num,arr,newArr)
+        }
+      })
+    },
+    finalAdd(data){
+      addAddress(data).then(res=>{
+        Message.success(res.msg)
+        getAddress().then(res=>{
+            this.address=res.data
+        })
+      })
+    },
+    chooseAddress(obj){
+      this.selected=obj
+    },
+    deleteAddress(obj){
+      removeAddress(obj.addressId).then(res=>{
+        Message.success(res.msg)
+        this.address=this.address.filter(i=>i.addressId!=obj.addressId)
+      })
+    },
+    finalCheck(){
+      const obj={
+        addressId:this.selected.addressId,
+        shoppingCartIds:this.cart.join(',')
+      }
+      createOrder(obj).then(res=>{
+        Message.success(res.msg)
+        this.$router.push('order')
+      })
+    }
   },
   created(){
-    area(1).then(res1=>{
-      console.log(res1);
+    getAddress().then(res=>{
+      this.address=res.data
     })
-    area(150302).then(res2=>{
-      console.log(res2);
-    })
+    let orderDatas=JSON.parse(sessionStorage.getItem('carts'))
+    this.data=orderDatas
+    this.cart=orderDatas.map(i=>i.shoppingCartId)
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.addGolden{
+  border: 2px solid #FF6700 !important;
+}
 .check-container{
   .upline{
         height: 81px;
@@ -213,10 +275,31 @@ export default {
       background-color: #fff;
       .item{
         font-size: 18px;
-        .add{
-          width: 270px;
-          height: 194px;
-          border: 1px solid #B0B0B0;
+        .adds{
+          gap: 32px;
+          margin-bottom:36px;
+          margin-top:20px;
+          .add{
+            position: relative;
+            color:#606266;
+            font-size:14px;
+            width: 270px;
+            height: 194px;
+            padding: 20px 24px;
+            border: 1px solid #B0B0B0;
+            &:hover{
+              border: 2px solid #FF6700;
+            }
+            i{
+              position: absolute;
+              top: 10px;
+              right: 10px;
+              cursor: pointer;
+              &:hover{
+                color: #FF6700;
+              }
+            }
+          }
         }
         .add1{
           width: 270px;
@@ -227,7 +310,7 @@ export default {
           border: 1px solid #B0B0B0;
           &:hover{
             color: #FF6700;
-            border: 1px solid #FF6700;
+            border: 2px solid #FF6700;
           }
         }
         .good{

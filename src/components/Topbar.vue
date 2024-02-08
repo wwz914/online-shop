@@ -42,6 +42,7 @@
 </template>
 
 <script>
+// TODO:登录注册表单校验
 import {login,register} from '@/api/user.js'
 import {cartCount} from '@/api/cart.js'
 import '@/assets/public.css'
