@@ -42,7 +42,6 @@
 </template>
 
 <script>
-// TODO:登录注册表单校验
 import {login,register} from '@/api/user.js'
 import {cartCount} from '@/api/cart.js'
 import '@/assets/public.css'
@@ -62,9 +61,18 @@ export default {
       loginForm:{},
       signinForm:{},
       rules:{
-        username:[{required:true, message:'请输入账号', trigger:'blur'}],
-        password:[{required:true, message:'请输入密码', trigger:'blur'}],
-        confirmPwd:[{required:true, validator:validatePwd, message:'请再次输入密码', trigger:'blur'}],
+        username:[
+          {required:true, message:'请输入账号', trigger:'blur'},
+          {min:5,max:16,message:'字母开头,长度5-16之间,允许字母数字下划线',trigger:'blur'}
+        ],
+        password:[
+          {required:true, message:'请输入密码', trigger:'blur'},
+          {min:6,max:18,message:'字母开头,长度6-18之间,允许字母数字下划线',trigger:'blur'}
+        ],
+        confirmPwd:[
+          {required:true, message:'请再次输入密码', trigger:'blur'},
+          {validator:validatePwd,message:'两次输入的密码不一致',trigger:'blur'}
+        ],
       },
       cart:0
     }

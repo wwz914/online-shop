@@ -91,18 +91,21 @@
       width="660px"
       :before-close="handleClose">
       <div class="dialog-content">
-        <el-form ref="addressRef" :model="addressForm">
-          <el-form-item>
+        <el-form ref="addressRef" :model="addressForm" :rules="rules">
+          <el-form-item required>
             <el-col :span="11">
-              <el-input v-model="addressForm.name" placeholder="姓名"></el-input>
+              <el-form-item prop="name">
+                <el-input v-model="addressForm.name" placeholder="姓名"></el-input>
+              </el-form-item>
             </el-col>
             <el-col :span="2">&nbsp;</el-col>
             <el-col :span="11">
-              <!-- TODO:手机号校验 -->
-              <el-input v-model="addressForm.phone" placeholder="手机号"></el-input>
+              <el-form-item prop="phone">
+                <el-input v-model="addressForm.phone" placeholder="手机号"></el-input>
+              </el-form-item>
             </el-col>
           </el-form-item>
-          <el-form-item>
+          <el-form-item prop="area">
             <el-cascader
               v-model="addressForm.area"
               :props="props"
@@ -111,7 +114,7 @@
               @change="handleChange">
             </el-cascader>
           </el-form-item>
-          <el-form-item>
+          <el-form-item prop="addressDtl">
               <el-input
                 type="textarea"
                 :rows="3"
@@ -119,14 +122,14 @@
                 style="fontSize:14px;"
                 v-model="addressForm.addressDtl">
               </el-input>
-          </el-form-item>
+          </el-form-item prop="addressTags">
           <el-form-item>
               <el-input v-model="addressForm.addressTags" placeholder="地址标签"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button class="cancel" @click="dialogVisible = false">取 消</el-button>
+        <el-button class="cancel" @click="closeDialog">取 消</el-button>
         <el-button class="confirm" @click="addConfirm">确 定</el-button>
       </span>
     </el-dialog>
@@ -137,7 +140,7 @@
 import {addAddress,getAddress,removeAddress,createOrder} from '@/api/order.js'
 import {area} from '@/api/area.js'
 import '@/assets/public.css'
-import { Message } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 export default {
   data(){
     return{
@@ -165,18 +168,25 @@ export default {
         name:undefined,
         phone:undefined
       },
-      data:[
-        {
-          num:1,
-          productId: 10,
-          productIntro: "全面屏设计 | 内置小爱同学 | 4K + HDR | 杜比DTS | PatchWall | 海量内容 | 2GB + 8GB大存储 | 64位四核处理器",
-          productName: "小米全面屏电视E55A",
-          productPicture: "xiaomi-images/appliance/MiTv-E55A.png",
-          productPrice: 2099,
-          productSellingPrice: 1899,
-          productTitle: "全面屏设计，人工智能语音"
-        }
-      ],
+      data:[],
+      rules:{
+        name:[
+          {required:true,message:'请输入姓名',trigger:'blur'}
+        ],
+        phone:[
+          {required:true,message:'请输入手机号',trigger:'blur'},
+          {pattern:/^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/,message:'请输入格式正确的手机号',trigger:'blur'}
+        ],
+        area:[
+          {required:true,message:'请输入区域',trigger:'blur'}
+        ],
+        addressDtl:[
+          {required:true,message:'请输入详细地址',trigger:'blur'}
+        ],
+        addressTags:[
+          {required:true,message:'请输入地址标签',trigger:'blur'}
+        ],
+      }
     }
   },
   computed:{
@@ -195,6 +205,7 @@ export default {
     },
     handleClose(){
       this.dialogVisible=false
+      this.$refs['addressRef'].resetFields()
     },
     handleChange(){},
     addConfirm(){
@@ -221,6 +232,7 @@ export default {
     finalAdd(data){
       addAddress(data).then(res=>{
         Message.success(res.msg)
+        this.$refs['addressRef'].resetFields()
         getAddress().then(res=>{
             this.address=res.data
         })
@@ -236,6 +248,10 @@ export default {
       })
     },
     finalCheck(){
+      if(!this.selected.addressId){
+        MessageBox.alert('下单前请先选择配送地址~').then(res=>{})
+        return
+      }
       const obj={
         addressId:this.selected.addressId,
         shoppingCartIds:this.cart.join(',')
@@ -244,6 +260,10 @@ export default {
         Message.success(res.msg)
         this.$router.push('order')
       })
+    },
+    closeDialog(){
+      this.dialogVisible=false
+      this.$refs['addressRef'].resetFields()
     }
   },
   created(){
@@ -251,8 +271,10 @@ export default {
       this.address=res.data
     })
     let orderDatas=JSON.parse(sessionStorage.getItem('carts'))
-    this.data=orderDatas
-    this.cart=orderDatas.map(i=>i.shoppingCartId)
+    if(orderDatas){
+      this.data=orderDatas
+      this.cart=orderDatas.map(i=>i.shoppingCartId)
+    }
   }
 }
 </script>
