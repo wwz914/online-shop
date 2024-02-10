@@ -1,19 +1,18 @@
-# xiaomi
+# 网上购物平台（2.0）
 
-## Project setup
-```
-npm install
-```
+## Project setup（启动步骤）
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+1. 安装项目所需的包
 
-### Compiles and minifies for production
-```
-npm run build
-```
+   ```powershell
+   npm install
+   ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+2. 启动项目
+
+   ```powershell
+   npm run serve
+   ```
+
+3. 浏览器查看对应地址的显示结果
+
