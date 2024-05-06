@@ -63,7 +63,7 @@ export default {
       rules:{
         username:[
           {required:true, message:'请输入账号', trigger:'blur'},
-          {min:5,max:16,message:'字母开头,长度5-16之间,允许字母数字下划线',trigger:'blur'}
+          {min:2,max:16,message:'字母开头,长度5-16之间,允许字母数字下划线',trigger:'blur'}
         ],
         password:[
           {required:true, message:'请输入密码', trigger:'blur'},
@@ -106,7 +106,7 @@ export default {
     toLogin(){
       login(this.loginForm).then(res=>{
         console.log(res);
-        this.$cookies.set('xm-token',res.data,'10s')
+        this.$cookies.set('xm-token',res.data,'2d')
         Message.success(res.msg)
         this.$store.commit('changeLogin',false)
       }).catch(()=>{})
