@@ -27,13 +27,13 @@ export default {
   methods:{
     toIndex(){
       if(this.$store.state.pageIndex!=1){
-        this.$router.push('/home/index')
+        this.$router.push('/home/index',()=>{},()=>{})
       }
       this.$store.commit('changePage',1)
     },
     toGood(){
       if(this.$store.state.pageIndex!=2){
-        this.$router.push('/home/good')
+        this.$router.push('/home/good',()=>{},()=>{})
       }
       this.$store.commit('changePage',2)
     },
