@@ -8,7 +8,6 @@
 </template>
 
 <script>
-//TODO:页面跳转更新bug
 import Bottombar from '@/components/Bottombar.vue'
 import Topbar from '@/components/Topbar.vue'
 import Logobar from '@/components/Logobar.vue'

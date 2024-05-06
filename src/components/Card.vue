@@ -16,7 +16,6 @@
 </template>
 
 <script>
-//TODO:页面刷新停留
 import {hot} from '@/api/common.js'
 import {goodList} from '@/api/good.js'
 export default {

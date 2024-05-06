@@ -100,7 +100,7 @@ export default {
       this.$refs['signin'].resetFields()
     },
     toLike(){
-      this.$router.push('like')
+      this.$router.push('/home/like')
       this.$store.commit('changePage',4)
     },
     toLogin(){
@@ -118,11 +118,11 @@ export default {
       }).catch(()=>{})
     },
     toCart(){
-      this.$router.push('cart')
+      this.$router.push('/home/cart')
       this.$store.commit('changePage',6)
     },
     toOrder(){
-      this.$router.push('order')
+      this.$router.push('/home/order')
       this.$store.commit('changePage',7)
     }
   },
