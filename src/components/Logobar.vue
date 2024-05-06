@@ -24,6 +24,27 @@ export default {
       pageIndex:1,
     }
   },
+  watch:{
+    '$route.path':{
+      deep:true,
+      immediate:true,
+      handler(n,o){
+        console.log(n,1);
+        switch (n.split('home/')[1].split('/')[0]) {
+          case 'index':
+            console.log(111);
+              this.$store.commit('changePage',1)
+            break;
+          case 'good':
+              this.$store.commit('changePage',2)
+            break;
+        
+          default:
+            break;
+        }
+      }
+    }
+  },
   methods:{
     toIndex(){
       if(this.$store.state.pageIndex!=1){
