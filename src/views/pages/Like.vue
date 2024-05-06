@@ -40,7 +40,7 @@ export default {
         likeList().then(res=>{
             console.log(res);
             this.likesList=res.data
-        })
+        }).catch(()=>{})
     }
 }
 </script>

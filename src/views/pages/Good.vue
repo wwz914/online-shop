@@ -59,14 +59,14 @@ export default {
         getCategory(){
             category().then(res=>{
                 this.Catas=res.data
-            })
+            }).catch(()=>{})
         },
         getGoodList(){
             goodList(this.query).then(res=>{
                 res.total=Math.ceil(res.total/this.query.pageSize)*10
                 res.resLen=res.rows.length
                 this.res=res
-            })
+            }).catch(()=>{})
         },
         selectCatagory(id){
             this.cur=id

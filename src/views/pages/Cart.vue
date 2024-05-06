@@ -132,14 +132,14 @@ export default {
             this.cartList=this.cartList.filter(i=>i.productId!=id)
             deleteCart(shoppingCartId).then(res=>{
                 Message.success(res.msg)
-            })
+            }).catch(()=>{})
         }
     },
     created(){
         cart().then(res=>{
             this.cartList=res.data
             this.all=this.cartList.length
-        })
+        }).catch(()=>{})
     }
 }
 </script>

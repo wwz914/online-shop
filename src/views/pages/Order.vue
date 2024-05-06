@@ -83,7 +83,7 @@ export default {
     created(){
         getOrder().then(res=>{
             this.orderList=res.data
-        })
+        }).catch(()=>{})
     }
 }
 </script>

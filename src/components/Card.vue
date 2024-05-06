@@ -50,7 +50,7 @@ export default {
             goodList(this.query).then(res=>{
                 this.data=res.rows[0]
                 this.data.productPicture=process.env.VUE_APP_BASE_URL+this.data.productPicture
-            })
+            }).catch(()=>{})
         }else if(this.findByLike){
             this.like.productPicture=process.env.VUE_APP_BASE_URL+this.like.productPicture
             this.data=this.like
@@ -62,7 +62,7 @@ export default {
                         this.data.productPicture=process.env.VUE_APP_BASE_URL+this.data.productPicture
                     }
                 }
-            })
+            }).catch(()=>{})
         }
     }
 }

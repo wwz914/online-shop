@@ -19,8 +19,10 @@ instance.interceptors.response.use(res=>{
     unAccessToken(res)
     const {data}=res
     if(res.status!=200||data.code!= 200){
-        Message.error(data.msg)
-        return Promise.reject(res)
+        if(data.code!=401&&res.status!=401){
+            Message.error(data.msg)
+            return Promise.reject(res)
+        }
     }
     // 拆包
     return res.data
@@ -44,6 +46,6 @@ function unAccessToken(instance){
             //删除token
             VueCookies.remove('xm-token')
             store.commit('changeLogin',true)
-        })
+        }).catch((err)=>{})
     }
 }

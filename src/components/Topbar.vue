@@ -77,6 +77,11 @@ export default {
       cart:0
     }
   },
+  watch:{
+    '$route.path':(n,o)=>{
+      console.log(n,o);
+    }
+  },
   computed:{
     loginVisible(){
       return this.$store.state.isLoginVisisble
@@ -101,16 +106,16 @@ export default {
     toLogin(){
       login(this.loginForm).then(res=>{
         console.log(res);
-        this.$cookies.set('xm-token',res.data,'2d')
+        this.$cookies.set('xm-token',res.data,'10s')
         Message.success(res.msg)
         this.$store.commit('changeLogin',false)
-      })
+      }).catch(()=>{})
     },
     toRegister(){
       register(this.signinForm).then(res=>{
         Message.success(res.msg)
         this.$store.commit('changeRegister',false)
-      })
+      }).catch(()=>{})
     },
     toCart(){
       this.$router.push('cart')
@@ -122,9 +127,11 @@ export default {
     }
   },
   created(){
+    console.log('刷新');
+    console.log(this.$route.path.split('/')[this.$route.path.split('/').length-1]);
     cartCount().then(res=>{
       this.cart=res.data
-    })
+    }).catch(()=>{})
     const locationIndex=location.href.split('/')[location.href.split('/').length-1]
     if(locationIndex=='like'){
       this.$store.commit('changePage',4)

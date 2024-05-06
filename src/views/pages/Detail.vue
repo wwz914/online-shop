@@ -80,7 +80,7 @@ export default {
       }else{
         like(this.data.productId).then(res=>{
           Message.success(res.msg)
-        })
+        }).catch(()=>{})
       }
     },
     addU(){
@@ -90,7 +90,7 @@ export default {
         addToCart({productId:this.data.productId}).then(res=>{
           console.log(res);
           Message.success(res.msg)
-        })
+        }).catch(()=>{})
       }
     }
   },
@@ -99,7 +99,7 @@ export default {
     detail(id).then(res=>{
       this.data=res.data
       this.data.pictures.forEach(i => i.productPicture=process.env.VUE_APP_BASE_URL+i.productPicture);
-    })
+    }).catch(()=>{})
   }
 }
 </script>

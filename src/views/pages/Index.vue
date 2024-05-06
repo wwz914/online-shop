@@ -112,7 +112,7 @@ export default {
         getBanner(){
             banner().then(res=>{
                 this.banners=res.data.map((i)=>process.env.VUE_APP_BASE_URL+i.url)
-            })
+            }).catch(()=>{})
         },
         getHot(){
             hot().then(res=>{
@@ -122,7 +122,7 @@ export default {
                 this.households.householdPic2=process.env.VUE_APP_BASE_URL+res.rows[1].categoryPicture2
                 this.configs.configPic1=process.env.VUE_APP_BASE_URL+res.rows[2].categoryPicture1
                 this.configs.configPic2=process.env.VUE_APP_BASE_URL+res.rows[2].categoryPicture2
-            })
+            }).catch(()=>{})
         },
     },
     created(){

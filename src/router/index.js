@@ -1,5 +1,8 @@
 import Vue from 'vue'
+import store from '@/store'
 import VueRouter from 'vue-router'
+import VueCookies from 'vue-cookies'
+import { MessageBox } from 'element-ui'
 
 Vue.use(VueRouter)
 
@@ -25,6 +28,21 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to,from,next)=>{
+  if(!VueCookies.isKey('xm-token')){
+    if(to.path!='/home/index'&&to.path!='/home/good'&&!to.path.includes('/home/detail')){
+      MessageBox.alert('认证过期，请重新登录').then(()=>{
+        VueCookies.remove('xm-token')
+        store.commit('changeLogin',true)
+      }).catch(()=>{})
+    }else{
+      next()
+    }
+  }else{
+    next()
+  }
 })
 
 export default router
