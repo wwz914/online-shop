@@ -78,7 +78,7 @@
               </div>
             </div>
             <div class="btns">
-              <el-button class="backToCart">返回购物车</el-button>
+              <el-button class="backToCart" @click="backToCart">返回购物车</el-button>
               <el-button class="check" @click="finalCheck">结算</el-button>
             </div>
           </div>
@@ -260,6 +260,9 @@ export default {
         Message.success(res.msg)
         this.$router.push('order')
       })
+    },
+    backToCart(){
+      this.$router.back()
     },
     closeDialog(){
       this.dialogVisible=false
